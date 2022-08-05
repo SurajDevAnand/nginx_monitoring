@@ -96,3 +96,4 @@ if __name__ == '__main__':
     result = nginx._collect_metrics_()
     print(json.dumps(result, indent=4, sort_keys=True))
         
+
