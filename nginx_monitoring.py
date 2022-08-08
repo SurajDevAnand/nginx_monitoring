@@ -10,6 +10,7 @@ class NginxServerMonitoring():
         self._config_data_ = config_data
         self.data['plugin_version'] = self._config_data_['plugin_version']
         self.data['heartbeat_required'] = self._config_data_['heartbeat_required']
+        self.data['applog']=self._config_data_['applog']
     
     def _get_request_data_(self):
         PYTHON_MAJOR_VERSION = sys.version_info[0]    
@@ -78,6 +79,9 @@ def _load_args_():
     
     parser.add_argument('--plugin_version', help='plugin_version', type=int,  nargs='?', default=1)
     parser.add_argument('--heartbeat', help='is heartbeat enabled', type=bool, nargs='?', default=True)
+    parser.add_argument('--logs_enabled', help='enable log collection for this plugin application',default="False")
+    parser.add_argument('--log_type_name', help='Display name of the log type', nargs='?', default=None)
+    parser.add_argument('--log_file_path', help='list of comma separated log file paths', nargs='?', default=None)
 
     args = parser.parse_args()
     
@@ -87,6 +91,21 @@ def _load_args_():
     _config_data_['timeout'] = args.timeout
     _config_data_['plugin_version'] = args.plugin_version
     _config_data_['heartbeat_required'] = args.heartbeat
+    
+    logsenabled=args.logs_enabled
+    logtypename=args.log_type_name
+    logfilepath=args.log_file_path
+    
+    
+    applog={}
+    if(logsenabled in ['True', 'true', '1']):
+        applog["logs_enabled"]=True
+        applog["log_type_name"]=logtypename
+        applog["log_file_path"]=logfilepath
+    else:
+        applog["logs_enabled"]=False
+    _config_data_['applog'] = applog
+
     
     return _config_data_
     
